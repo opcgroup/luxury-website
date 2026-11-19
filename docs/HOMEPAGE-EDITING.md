@@ -1,3 +1,9 @@
+## 1.3.6 Customizer instant preview
+
+In Appearance > Customize > Luxury Website — Design Studio, hero text, homepage headings, descriptions, colors, most numeric sizing controls and expandable FAQs update immediately in the preview iframe. There is **no need to Publish or reload just to preview**. Publish only after you are satisfied with the draft changes. Structural settings such as show/hide sections and project counts use WordPress automatic preview refresh (not a full-site publish).
+
+Appearance > Luxury Website > Homepage is a separate dashboard settings form, not a visual editor. Use **Save Website Settings** there. After deploying an update, force-refresh browser cached scripts once (Ctrl+F5) if the Customizer still uses old JavaScript.
+
 # Homepage editing (Luxury Website 1.3.4)
 
 The Customizer includes individual Homepage sections for search and statistics, About, Projects, Features, Gallery, Location & Map, FAQ Questions & Answers (six entries), Call To Action, Articles, and Contact Form Intro.

@@ -22,9 +22,25 @@ add_action('customize_register',function($wp_customize){
   'lw_footer'=>array('title'=>'Contact & Footer','priority'=>60),
  );
  foreach($groups as $id=>$val) $wp_customize->add_section($id,array_merge($val,array('panel'=>'lw_panel')));
- $add=function($section,$id,$label,$type='text',$choices=array()) use($wp_customize){
+ // Text, colors and spacing have instant iframe previews; structural settings use core refresh.
+ $live_fields=array(
+  'primary','accent','background','surface','ink','muted','header_bg','header_color','topbar_bg','topbar_color','font',
+  'container_width','radius','header_padding','header_height','logo_height','header_gap','menu_gap','menu_font_size','header_mobile_height','hero_height','hero_overlay','section_gap',
+  'phone','email','tagline','cta_text','cta_url','hero_kicker','hero_title','hero_description','hero_button','hero_button_url','hero_secondary','hero_secondary_url','hero_image',
+  'home_search_kicker','about_kicker','about_title','about_description','about_button_text','about_button_url','about_image_badge_top','about_image_badge_bottom',
+  'projects_kicker','projects_title','projects_description','projects_all_text','features_kicker','features_title',
+  'gallery_kicker','gallery_title','location_kicker','location_title','location_description','location_art_label','location_map_label','location_map_url',
+  'faq_kicker','faq_title','cta_kicker','cta_section_title','cta_section_desc','cta_button_text','cta_button_url',
+  'blog_kicker','blog_title','blog_all_text','contact_kicker','contact_title','contact_desc',
+  'footer_about','footer_disclaimer','office_address','archive_title','archive_kicker','archive_description','archive_search_kicker','archive_search_title','archive_bg_color','archive_banner_padding','archive_align'
+ );
+ for($i=1;$i<=3;$i++) {
+  $live_fields[]= 'stat_'.$i.'_number';$live_fields[]= 'stat_'.$i.'_label';
+  $live_fields[]= 'feature_'.$i.'_title';$live_fields[]= 'feature_'.$i.'_body';
+ }
+ $add=function($section,$id,$label,$type='text',$choices=array()) use($wp_customize,$live_fields){
   $default=lw_defaults();$sid='lw_options['.$id.']';
-  $wp_customize->add_setting($sid,array('type'=>'option','default'=>$default[$id]??'','capability'=>'edit_theme_options','transport'=>'refresh','sanitize_callback'=>function($v)use($id){$arr=lw_sanitize_options(array($id=>$v));return $arr[$id];}));
+  $wp_customize->add_setting($sid,array('type'=>'option','default'=>$default[$id]??'','capability'=>'edit_theme_options','transport'=>in_array($id,$live_fields,true)?'postMessage':'refresh','sanitize_callback'=>function($v)use($id){$arr=lw_sanitize_options(array($id=>$v));return $arr[$id];}));
   $args=array('label'=>$label,'section'=>$section,'settings'=>$sid,'type'=>$type,'priority'=>10);
   if($choices) $args['choices']=$choices;
   if($type==='color') $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize,$sid,$args));
@@ -57,7 +73,7 @@ add_action('customize_register',function($wp_customize){
  $add('lw_home_faq','faq_kicker','Small Label');$add('lw_home_faq','faq_title','FAQ Heading');
  // Expandable FAQ repeater: one setting, with Add/Remove/Reorder controls.
  $sid='lw_options[faq_items]';
- $wp_customize->add_setting($sid,array('type'=>'option','default'=>wp_json_encode(lw_faq_items()),'capability'=>'edit_theme_options','transport'=>'refresh','sanitize_callback'=>function($value){$clean=lw_clean_faq_json($value);return $clean!==null?$clean:wp_json_encode(lw_faq_items());}));
+ $wp_customize->add_setting($sid,array('type'=>'option','default'=>wp_json_encode(lw_faq_items()),'capability'=>'edit_theme_options','transport'=>'postMessage','sanitize_callback'=>function($value){$clean=lw_clean_faq_json($value);return $clean!==null?$clean:wp_json_encode(lw_faq_items());}));
  $wp_customize->add_control(new LW_Customize_FAQ_Repeater($wp_customize,$sid,array('label'=>'FAQ Questions & Answers','section'=>'lw_home_faq','settings'=>$sid,'priority'=>20)));
  foreach(array('cta_kicker'=>'Small Label','cta_section_title'=>'CTA Heading','cta_section_desc'=>'CTA Description','cta_button_text'=>'CTA Button Text') as $id=>$label) $add('lw_home_cta',$id,$label,$id==='cta_section_desc'?'textarea':'text');
  $add('lw_home_cta','cta_button_url','CTA Button URL','url');
@@ -90,4 +106,11 @@ add_action('customize_register',function(){
 add_action('customize_controls_enqueue_scripts',function(){
  wp_enqueue_script('lw-faq-editor',LW_URI.'/assets/js/faq-editor.js',array('customize-controls'),LW_VERSION,true);
  wp_enqueue_style('lw-faq-editor',LW_URI.'/assets/css/faq-editor.css',array(),LW_VERSION);
+});
+
+// Registers the browser-side instant preview. Unhandled settings keep WordPress refresh transport.
+add_action('customize_preview_init',function(){
+ wp_enqueue_script('lw-customizer-preview',LW_URI.'/assets/js/customizer-preview.js',array('customize-preview'),LW_VERSION,true);
+ $font_css=array();foreach(lw_fonts() as $key=>$definition) $font_css[$key]=$definition['css'];
+ wp_localize_script('lw-customizer-preview','LWLivePreview',array('fonts'=>$font_css,'defaultHero'=>LW_URI.'/assets/img/hero-'.sanitize_file_name(lw_opt('preset','utopia')).'.svg'));
 });

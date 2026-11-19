@@ -89,7 +89,7 @@ function lw_faq_repeater_markup($is_customizer=false) {
  echo '<div class="lw-faq-editor-list" aria-live="polite"></div>';
  echo '<button type="button" class="button button-secondary lw-faq-add">+ Add New FAQ</button>';
  echo '<input type="hidden" class="lw-faq-json" '.($is_customizer?'data-customize-setting-link="lw_options[faq_items]"':'name="lw_options[faq_items]"').' value="'.esc_attr($list).'">';
- echo '<p class="description">Changes appear on the homepage after publishing/saving. Existing questions are retained on upgrade.</p></div>';
+ echo '<p class="description">In Appearance → Customize, FAQs preview as you type. Click Publish to save. Changes in the Studio require Save Website Settings.</p></div>';
 }
 
 function lw_sanitize_options($input) {

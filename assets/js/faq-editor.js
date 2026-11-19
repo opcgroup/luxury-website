@@ -55,6 +55,13 @@
       input.value = JSON.stringify(values);
       // WordPress Customizer listens to the change event on linked input fields.
       input.dispatchEvent(new Event('change', { bubbles:true }));
+      // Custom Customizer control: explicitly update the setting model so that
+      // postMessage reaches the preview iframe even if delegated DOM handling varies.
+      if (root.dataset.context === 'customizer' && window.wp && wp.customize) {
+        wp.customize('lw_options[faq_items]', function (setting) {
+          setting.set(input.value);
+        });
+      }
       relabel();
     }
     var typingTimer;

@@ -1,3 +1,9 @@
+## 1.3.6 – Instant Customizer Preview (November 19, 2026)
+- Added postMessage previewing for homepage headings, descriptions, FAQ list, hero, CTA, colors, spacing, footer and property archive copy.
+- Dynamic FAQ edit, add, remove and reorder reflect immediately in Customizer preview before Publish.
+- Kept WordPress refresh transport for structural section visibility, listing queries, and other settings that require PHP rerender.
+- No changes to published site until Publish. Existing saved options and SEO are preserved.
+
 ## 1.3.5 — 2026-11-19
 - Unlimited-in-practice homepage FAQ editor (up to 250 entries), with Add, Remove, Move Up and Move Down controls in Luxury Website Studio and Customize.
 - Preserves legacy FAQ answers when upgrading and keeps questions visible in accordion order.

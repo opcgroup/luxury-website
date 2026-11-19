@@ -2,7 +2,7 @@
 /** Luxury Website bootstrap. */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'LW_VERSION', '1.3.5' );
+define( 'LW_VERSION', '1.3.6' );
 define( 'LW_DIR', get_template_directory() );
 define( 'LW_URI', get_template_directory_uri() );
 

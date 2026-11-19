@@ -177,5 +177,5 @@ For Google title/meta description: **Appearance → Luxury Website → SEO Setti
 The footer's `Explore` links now use light text on the dark background with a gold hover/focus state. The default fallback links (Home / Projects / Contact) are stacked vertically rather than horizontally. To choose different footer links: Appearance → Menus → create a menu → assign to Footer Menu.
 
 
-### Flexible FAQ editing (v1.3.5)
+### Flexible FAQ editing (v1.3.6)
 Open Appearance → Luxury Website → Homepage and scroll to **FAQ Questions & Answers**, or use Appearance → Customize → Luxury Website — Design Studio → Homepage – FAQ Questions & Answers. Press Add New FAQ for each new question; edit, remove, and move questions up or down. Save Website Settings or Publish. Previous FAQ content is retained when upgrading. Each site can have up to 250 FAQ entries. FAQ schema is produced only when the built-in FAQ appears on the homepage and the theme SEO engine is active.
