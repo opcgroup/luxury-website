@@ -3,7 +3,7 @@ Theme Name: Luxury Website
 Theme URI: https://example.com/luxury-website/
 Author: Luxury Website Studio
 Description: Premium real estate WordPress theme with property listings, search and budget filters, floor plans, gallery, project enquiries, no-code builder, SEO, custom header, animations and GitHub updates.
-Version: 1.3.6
+Version: 1.3.7
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
@@ -189,3 +189,6 @@ Tags: custom-logo, custom-menu, featured-images, blog, one-column, two-columns, 
 .lw-location-art.lw-location-with-image{padding:0;overflow:hidden;display:block;background:var(--lw-surface)}
 .lw-location-art .lw-location-photo{width:100%;height:340px;object-fit:cover;border-radius:inherit}
 @media(max-width:720px){.lw-location-art .lw-location-photo{height:240px}}
+
+/* Dynamic property category and location image cards (v1.3.7). */
+.lw-home-cards-section{background:var(--lw-background)}.lw-home-categories{background:var(--lw-surface)}.lw-home-cards-section .lw-center-heading p{color:var(--lw-muted);margin:12px auto 0;max-width:660px}.lw-home-cards-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:23px}.lw-home-card{border-radius:var(--lw-radius);overflow:hidden;background:var(--lw-primary);min-width:0;box-shadow:0 14px 40px #122e2718;transition:transform .3s ease,box-shadow .3s ease}.lw-home-card:hover{transform:translateY(-6px);box-shadow:0 22px 48px #122e272a}.lw-home-card-link{display:block;position:relative;min-height:300px;aspect-ratio:1.05;overflow:hidden;color:#fff!important;text-decoration:none}.lw-home-card-link>img,.lw-home-card-placeholder{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .55s ease}.lw-home-card-placeholder{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--lw-primary),#536c65);font:400 7rem var(--lw-font);color:#ffffff6b}.lw-home-card:hover img,.lw-home-card:hover .lw-home-card-placeholder{transform:scale(1.07)}.lw-home-card-link:after{content:'';position:absolute;inset:22% 0 0;background:linear-gradient(0deg,#081921ee 0%,#0d262c99 45%,transparent 100%);pointer-events:none}.lw-home-card-overlay{position:absolute;z-index:1;bottom:0;left:0;right:0;padding:25px;display:flex;flex-direction:column;gap:8px}.lw-home-card-overlay strong{font:500 clamp(1.3rem,2.2vw,1.8rem)/1.25 var(--lw-font)}.lw-home-card-desc{font-size:.85rem;color:#ffffffdb;line-height:1.5;max-width:32ch}.lw-home-card-arrow{position:absolute;right:21px;bottom:22px;width:37px;height:37px;display:grid;place-items:center;color:var(--lw-primary);background:var(--lw-accent);border-radius:50%;font-size:1.3rem}.lw-home-card-overlay strong,.lw-home-card-desc{padding-right:45px}@media(max-width:980px){.lw-home-cards-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.lw-home-cards-grid{grid-template-columns:1fr;gap:16px}.lw-home-card-link{min-height:250px;aspect-ratio:1.4}}

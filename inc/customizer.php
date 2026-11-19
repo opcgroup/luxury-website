@@ -11,6 +11,8 @@ add_action('customize_register',function($wp_customize){
   'lw_home_about'=>array('title'=>'Homepage – About','priority'=>42),
   'lw_home_projects'=>array('title'=>'Homepage – Projects & Cards','priority'=>43),
   'lw_home_features'=>array('title'=>'Homepage – Feature Cards','priority'=>44),
+  'lw_home_categories'=>array('title'=>'Homepage – Property Category Cards','priority'=>45),
+  'lw_home_locations_cards'=>array('title'=>'Homepage – Location Cards','priority'=>46),
   'lw_home_gallery'=>array('title'=>'Homepage – Image Gallery','priority'=>46),
   'lw_home_location'=>array('title'=>'Homepage – Location & Map','priority'=>47),
   'lw_home_faq'=>array('title'=>'Homepage – FAQ Questions & Answers','priority'=>48),
@@ -56,7 +58,7 @@ add_action('customize_register',function($wp_customize){
  foreach(array('hero_kicker'=>'Small Intro','hero_title'=>'Main Headline','hero_description'=>'Description','hero_button'=>'Main Button','hero_button_url'=>'Main Button Link','hero_secondary'=>'Second Button','hero_secondary_url'=>'Second Button Link') as $id=>$label) $add('lw_hero',$id,$label,($id==='hero_description'?'textarea':'text'));
  $add('lw_hero','hero_image','Hero Image','image');$add('lw_hero','hero_style','Hero Design','select',array('split'=>'Split','full'=>'Full Bleed','minimal'=>'Minimal'));
  $add('lw_hero','hero_overlay','Hero Photo Overlay %','number');$add('lw_hero','hero_height','Hero Minimum Height (px)','number');
- foreach(array('stats_enable'=>'Show Stats','about_enable'=>'Show About','projects_enable'=>'Show Projects','filters_enable'=>'Project Filters','features_enable'=>'Show Features','gallery_enable'=>'Show Image Gallery','location_enable'=>'Show Location','faq_enable'=>'Show FAQ','cta_enable'=>'Show CTA','blog_enable'=>'Show Articles','contact_enable'=>'Show Enquiry Form','use_page_content'=>'Use Custom Homepage Content') as $id=>$label) $add('lw_sections',$id,$label,'checkbox');
+ foreach(array('stats_enable'=>'Show Stats','categories_cards_enable'=>'Show Category Cards','locations_cards_enable'=>'Show Location Cards','about_enable'=>'Show About','projects_enable'=>'Show Projects','filters_enable'=>'Project Filters','features_enable'=>'Show Features','gallery_enable'=>'Show Image Gallery','location_enable'=>'Show Location','faq_enable'=>'Show FAQ','cta_enable'=>'Show CTA','blog_enable'=>'Show Articles','contact_enable'=>'Show Enquiry Form','use_page_content'=>'Use Custom Homepage Content') as $id=>$label) $add('lw_sections',$id,$label,'checkbox');
  // Homepage labels, fields and images are all editable in the live Customizer.
  $add('lw_home_stats','home_search_kicker','Search Form Eyebrow');
  for($i=1;$i<=3;$i++) { $add('lw_home_stats','stat_'.$i.'_number','Statistic '.$i.' Number');$add('lw_home_stats','stat_'.$i.'_label','Statistic '.$i.' Label'); }
@@ -66,6 +68,13 @@ add_action('customize_register',function($wp_customize){
  $add('lw_home_projects','projects_count','Number of Projects','number');
  foreach(array('features_kicker'=>'Small Label','features_title'=>'Features Heading') as $id=>$label) $add('lw_home_features',$id,$label);
  for($i=1;$i<=3;$i++) { $add('lw_home_features','feature_'.$i.'_title','Feature Card '.$i.' Title');$add('lw_home_features','feature_'.$i.'_body','Feature Card '.$i.' Description','textarea'); }
+ foreach(array('categories_cards_enable'=>'Enable Category Cards','categories_cards_kicker'=>'Small Label','categories_cards_heading'=>'Section Title','categories_cards_description'=>'Section Intro') as $id=>$label) $add('lw_home_categories',$id,$label,$id==='categories_cards_enable'?'checkbox':($id==='categories_cards_description'?'textarea':'text'));
+ foreach(array('locations_cards_enable'=>'Enable Location Cards','locations_cards_kicker'=>'Small Label','locations_cards_heading'=>'Section Title','locations_cards_description'=>'Section Intro') as $id=>$label) $add('lw_home_locations_cards',$id,$label,$id==='locations_cards_enable'?'checkbox':($id==='locations_cards_description'?'textarea':'text'));
+ foreach(array('categories'=>'lw_home_categories','locations'=>'lw_home_locations_cards') as $kind=>$section) {
+   $sid='lw_options['.$kind.'_cards]';
+   $wp_customize->add_setting($sid,array('type'=>'option','default'=>wp_json_encode(lw_home_cards($kind)),'capability'=>'edit_theme_options','transport'=>'refresh','sanitize_callback'=>function($value)use($kind){$clean=lw_clean_home_cards_json($value);return $clean!==null?$clean:wp_json_encode(lw_home_cards($kind));}));
+   $wp_customize->add_control(new LW_Customize_Home_Cards_Repeater($wp_customize,$sid,array('label'=>ucfirst($kind).' Cards','section'=>$section,'settings'=>$sid,'kind'=>$kind,'priority'=>25)));
+ }
  foreach(array('gallery_kicker'=>'Small Label','gallery_title'=>'Gallery Heading') as $id=>$label) $add('lw_home_gallery',$id,$label);
  for($i=1;$i<=3;$i++) $add('lw_home_gallery','gallery_'.$i,'Gallery Image '.$i,'image');
  foreach(array('location_kicker'=>'Small Label','location_title'=>'Location Heading','location_description'=>'Location Description','location_art_label'=>'Map Card Label','location_map_label'=>'Maps Link Text') as $id=>$label) $add('lw_home_location',$id,$label,$id==='location_description'?'textarea':'text');
@@ -103,9 +112,21 @@ add_action('customize_register',function(){
   }
  }
 },1);
+add_action('customize_register',function(){
+ if(class_exists('LW_Customize_Home_Cards_Repeater'))return;
+ class LW_Customize_Home_Cards_Repeater extends WP_Customize_Control {
+  public $type='lw_home_cards_repeater';public $kind='categories';
+  protected function render_content() {
+   echo '<span class="customize-control-title">'.esc_html($this->label).'</span>';
+   lw_home_cards_repeater_markup($this->kind,true);
+  }
+ }
+},1);
 add_action('customize_controls_enqueue_scripts',function(){
  wp_enqueue_script('lw-faq-editor',LW_URI.'/assets/js/faq-editor.js',array('customize-controls'),LW_VERSION,true);
  wp_enqueue_style('lw-faq-editor',LW_URI.'/assets/css/faq-editor.css',array(),LW_VERSION);
+ wp_enqueue_script('lw-home-cards-editor',LW_URI.'/assets/js/home-cards-editor.js',array('customize-controls'),LW_VERSION,true);
+ wp_enqueue_style('lw-home-cards-editor',LW_URI.'/assets/css/home-cards-editor.css',array(),LW_VERSION);
 });
 
 // Registers the browser-side instant preview. Unhandled settings keep WordPress refresh transport.

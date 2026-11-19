@@ -1,3 +1,12 @@
+# Luxury Website Changelog
+
+## v1.3.7 — Homepage Card Builders
+- Add/Remove/Move Up/Move Down property category and destination cards (up to 30 in each group).
+- Images, descriptions, titles and links editable in Appearance → Luxury Website → Homepage or Customizer.
+- Both sections disabled by default to preserve existing homepages.
+- Responsive 3/2/1 grid, animation classes and descriptive image alt text.
+- Existing v1.3.6 FAQ, SEO, Github updater and layout remain unchanged.
+
 ## 1.3.6 – Instant Customizer Preview (November 19, 2026)
 - Added postMessage previewing for homepage headings, descriptions, FAQ list, hero, CTA, colors, spacing, footer and property archive copy.
 - Dynamic FAQ edit, add, remove and reorder reflect immediately in Customizer preview before Publish.

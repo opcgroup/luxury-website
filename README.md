@@ -179,3 +179,7 @@ The footer's `Explore` links now use light text on the dark background with a go
 
 ### Flexible FAQ editing (v1.3.6)
 Open Appearance → Luxury Website → Homepage and scroll to **FAQ Questions & Answers**, or use Appearance → Customize → Luxury Website — Design Studio → Homepage – FAQ Questions & Answers. Press Add New FAQ for each new question; edit, remove, and move questions up or down. Save Website Settings or Publish. Previous FAQ content is retained when upgrading. Each site can have up to 250 FAQ entries. FAQ schema is produced only when the built-in FAQ appears on the homepage and the theme SEO engine is active.
+
+
+### v1.3.7 Homepage Cards
+Appearance → Luxury Website → Homepage: use **Show Property Categories on Homepage** and **Show Location Cards on Homepage** to enable sections. Category and Location repeaters support image picker, custom text/link, add/remove/reorder. Also available in Appearance → Customize → Luxury Website — Design Studio. If a card URL is empty, the theme will try to find a matching property taxonomy term or link to the /projects/ archive. Customizer card edits trigger an automatic preview refresh without publishing; other text fields support instant preview. Both sections are off by default to avoid changing an existing homepage unexpectedly.
