@@ -242,6 +242,20 @@ add_action('wp_head',function(){
     if ($breadcrumb) $schema['breadcrumb']=array('@id'=>$breadcrumb['@id']);
     $graph=array($schema);
     if ($breadcrumb) $graph[]=$breadcrumb;
+    // FAQ schema mirrors the questions actually rendered in the theme homepage.
+    if(is_front_page() && lw_opt('faq_enable')) {
+        $front_id=(int)get_option('page_on_front');
+        $custom_home=$front_id && (lw_opt('use_page_content') || get_post_meta($front_id,'_elementor_edit_mode',true)==='builder' || strpos((string)get_post_field('post_content',$front_id),'<!-- wp:luxury/')!==false);
+        if(!$custom_home) {
+            $entities=array();
+            foreach(lw_faq_items() as $faq) {
+                if(empty($faq['answer'])) continue;
+                $entities[]=array('@type'=>'Question','name'=>$faq['question'],'acceptedAnswer'=>array('@type'=>'Answer','text'=>$faq['answer']));
+            }
+            if($entities) $graph[]=array('@type'=>'FAQPage','@id'=>home_url('/').'#faq','mainEntity'=>$entities);
+        }
+    }
+
     // JSON_HEX_TAG prevents user-editable values from closing the JSON-LD script element.
     echo '<script type="application/ld+json">'.wp_json_encode(array('@context'=>'https://schema.org','@graph'=>$graph),JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT).'</script>' . "\n";
 },3);

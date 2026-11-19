@@ -1,3 +1,9 @@
+## 1.3.5 — 2026-11-19
+- Unlimited-in-practice homepage FAQ editor (up to 250 entries), with Add, Remove, Move Up and Move Down controls in Luxury Website Studio and Customize.
+- Preserves legacy FAQ answers when upgrading and keeps questions visible in accordion order.
+- FAQPage JSON-LD reflects the actual visible homepage FAQs when the built-in SEO module is active.
+- Homepage location, CTA, gallery and other content editing controls retained from 1.3.4.
+
 ## 1.3.3 — 2026-11-19
 - Fixed footer Explore menu links being nearly invisible on dark footer backgrounds.
 - Stacked the fallback footer navigation vertically when no footer menu is assigned.
@@ -51,3 +57,7 @@
 - Added navigation BreadcrumbList JSON-LD for singular pages, posts and property details when built-in SEO is enabled.
 - Hardened JSON-LD serialization of editor-managed values.
 - Documented heading hierarchy, duplicate SEO plugin behaviour, internal-linking, performance and safe permalink practices.
+
+## 1.3.4 — Homepage content editor in Customizer
+- Edit FAQ questions and answers, Location and map image, CTA copy and link, gallery/project labels, cards, statistics, blog, and contact text in live preview.
+- Retains all existing homepage settings and real estate pages; 3 optional additional FAQ entries.

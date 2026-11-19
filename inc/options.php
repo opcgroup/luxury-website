@@ -25,15 +25,15 @@ function lw_defaults() {
   'cta_text'=>'Book a Site Visit','cta_url'=>'#contact',
   'hero_kicker'=>'WELCOME TO LUXURY LIVING','hero_title'=>'Elevated Living. Extraordinary Addresses.','hero_description'=>'Explore thoughtfully selected homes, exclusive residences and premium properties designed for a remarkable life.','hero_image'=>'','hero_overlay'=>55,
   'hero_button'=>'Explore Projects','hero_button_url'=>'#projects','hero_secondary'=>'Contact Our Team','hero_secondary_url'=>'#contact','hero_height'=>625,
-  'stats_enable'=>1,'stat_1_number'=>'15+','stat_1_label'=>'Featured Projects','stat_2_number'=>'10+','stat_2_label'=>'Years of Experience','stat_3_number'=>'100%','stat_3_label'=>'Personal Assistance',
-  'about_enable'=>1,'about_kicker'=>'DISCOVER OUR WORLD','about_title'=>'Spaces curated for the way you live.','about_description'=>'From thoughtfully designed apartments to prestigious plots and villas, discover an experience shaped by beautiful architecture, convenient locations and personalized attention.','about_image'=>'',
-  'projects_enable'=>1,'projects_title'=>'Featured Properties','projects_description'=>'Handpicked projects and exceptional spaces.','projects_count'=>6,'filters_enable'=>1,
-  'features_enable'=>1,'features_title'=>'The Luxury Difference','feature_1_title'=>'Premium Locations','feature_1_body'=>'Properties in well-connected and desirable neighborhoods.','feature_2_title'=>'Thoughtful Design','feature_2_body'=>'Practical layouts, comfort and contemporary architecture.','feature_3_title'=>'Guided Experience','feature_3_body'=>'Personalized assistance at every step of the journey.',
-  'gallery_enable'=>0,'gallery_title'=>'A Closer Look','gallery_1'=>'','gallery_2'=>'','gallery_3'=>'',
-  'location_enable'=>1,'location_title'=>'Where We Are','location_description'=>'Explore the neighborhood, access routes and location advantages of your next address.','location_map_url'=>'',
-  'faq_enable'=>1,'faq_title'=>'Frequently Asked Questions','faq_1_question'=>'Can I arrange a site visit?','faq_1_answer'=>'Yes. Use the enquiry form or contact our team to request an appointment.','faq_2_question'=>'Can I request the latest price list?','faq_2_answer'=>'Contact our team for the latest available pricing and project details.','faq_3_question'=>'How do I confirm project approvals?','faq_3_answer'=>'Always verify RERA registration and official approvals from the appropriate authorities.','cta_enable'=>1,'cta_section_title'=>'Your next chapter begins here.','cta_section_desc'=>'Connect with our team for project details, brochures and an appointment.',
-  'blog_enable'=>1,'blog_title'=>'Insights & Updates','blog_count'=>3,
-  'contact_enable'=>1,'contact_title'=>'Start a Conversation','contact_desc'=>'Request a call back or schedule a personalized site visit.','contact_recipient'=>'',
+  'home_search_kicker'=>'FIND A PROPERTY','stats_enable'=>1,'stat_1_number'=>'15+','stat_1_label'=>'Featured Projects','stat_2_number'=>'10+','stat_2_label'=>'Years of Experience','stat_3_number'=>'100%','stat_3_label'=>'Personal Assistance',
+  'about_enable'=>1,'about_button_text'=>'Discover More','about_button_url'=>'#contact','about_image_badge_top'=>'DESIGNED','about_image_badge_bottom'=>'FOR LIVING.','about_kicker'=>'DISCOVER OUR WORLD','about_title'=>'Spaces curated for the way you live.','about_description'=>'From thoughtfully designed apartments to prestigious plots and villas, discover an experience shaped by beautiful architecture, convenient locations and personalized attention.','about_image'=>'',
+  'projects_enable'=>1,'projects_kicker'=>'CURATED COLLECTION','projects_all_text'=>'View All Projects','projects_title'=>'Featured Properties','projects_description'=>'Handpicked projects and exceptional spaces.','projects_count'=>6,'filters_enable'=>1,
+  'features_enable'=>1,'features_kicker'=>'THE DETAILS MATTER','features_title'=>'The Luxury Difference','feature_1_title'=>'Premium Locations','feature_1_body'=>'Properties in well-connected and desirable neighborhoods.','feature_2_title'=>'Thoughtful Design','feature_2_body'=>'Practical layouts, comfort and contemporary architecture.','feature_3_title'=>'Guided Experience','feature_3_body'=>'Personalized assistance at every step of the journey.',
+  'gallery_enable'=>0,'gallery_kicker'=>'THE GALLERY','gallery_title'=>'A Closer Look','gallery_1'=>'','gallery_2'=>'','gallery_3'=>'',
+  'location_enable'=>1,'location_kicker'=>'LOCATION & ACCESS','location_art_label'=>'LOCATION & CONNECTIVITY','location_map_label'=>'Open in Maps','location_image'=>'','location_title'=>'Where We Are','location_description'=>'Explore the neighborhood, access routes and location advantages of your next address.','location_map_url'=>'',
+  'faq_enable'=>1,'faq_kicker'=>'GOOD TO KNOW','faq_title'=>'Frequently Asked Questions','faq_items'=>'','faq_1_question'=>'Can I arrange a site visit?','faq_1_answer'=>'Yes. Use the enquiry form or contact our team to request an appointment.','faq_2_question'=>'Can I request the latest price list?','faq_2_answer'=>'Contact our team for the latest available pricing and project details.','faq_3_question'=>'How do I confirm project approvals?','faq_3_answer'=>'Always verify RERA registration and official approvals from the appropriate authorities.','faq_4_question'=>'','faq_4_answer'=>'','faq_5_question'=>'','faq_5_answer'=>'','faq_6_question'=>'','faq_6_answer'=>'','cta_enable'=>1,'cta_kicker'=>'YOUR NEW BEGINNING','cta_button_text'=>"Let's Connect",'cta_button_url'=>'#contact','cta_section_title'=>'Your next chapter begins here.','cta_section_desc'=>'Connect with our team for project details, brochures and an appointment.',
+  'blog_enable'=>1,'blog_kicker'=>'THE JOURNAL','blog_all_text'=>'Read All Articles','blog_title'=>'Insights & Updates','blog_count'=>3,
+  'contact_enable'=>1,'contact_kicker'=>"LET'S TALK",'contact_title'=>'Start a Conversation','contact_desc'=>'Request a call back or schedule a personalized site visit.','contact_recipient'=>'',
   'footer_about'=>'Explore curated residential and commercial property with a personal approach.','footer_disclaimer'=>'All project details, pricing, availability and images are subject to change. Verify approvals and RERA information with official sources before buying.',
   'footer_copyright'=>'','rera_number'=>'','office_address'=>'',
   'animation'=>'reveal','animation_speed'=>650,'card_hover'=>'lift','buttons_round'=>0,
@@ -52,11 +52,51 @@ function lw_options() {
  return array_merge(lw_defaults(),$raw);
 }
 function lw_opt($key,$default='') { $o=lw_options(); return isset($o[$key]) ? $o[$key] : $default; }
+/** Read the expandable FAQ list. Existing websites keep their older FAQ entries until edited. */
+function lw_faq_items() {
+ $raw=get_option('lw_options',array());
+ if(is_array($raw) && isset($raw['faq_items']) && is_string($raw['faq_items']) && $raw['faq_items']!=='') {
+  $saved=json_decode($raw['faq_items'],true);
+  if(is_array($saved)) return array_values(array_filter($saved,function($row){return is_array($row) && !empty($row['question']);}));
+ }
+ $o=lw_options();$items=array();
+ for($i=1;$i<=6;$i++) {
+  $q=trim((string)($o['faq_'.$i.'_question']??''));
+  if($q!=='') $items[]=array('question'=>$q,'answer'=>(string)($o['faq_'.$i.'_answer']??''));
+ }
+ return $items;
+}
+/** WordPress settings and Customizer both store the same sanitized JSON list. */
+function lw_clean_faq_json($value) {
+ if(!is_string($value) || strlen($value)>500000) return null;
+ $decoded=json_decode($value,true);
+ if(!is_array($decoded) || ($decoded && array_keys($decoded)!==range(0,count($decoded)-1))) return null;
+ $items=array();
+ foreach($decoded as $entry) {
+  if(count($items)>=250) break; // Practical safety boundary, not a two-question cap.
+  if(!is_array($entry)) continue;
+  $question=sanitize_text_field((string)($entry['question']??'')); $question=function_exists('mb_substr')?mb_substr($question,0,400):substr($question,0,400);
+  $answer=sanitize_textarea_field((string)($entry['answer']??'')); $answer=function_exists('mb_substr')?mb_substr($answer,0,6000):substr($answer,0,6000);
+  if($question!=='') $items[]=array('question'=>$question,'answer'=>$answer);
+ }
+ return wp_json_encode($items,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+}
+/** Visual editing area shared by the Studio and the WordPress Customizer. */
+function lw_faq_repeater_markup($is_customizer=false) {
+ $list=wp_json_encode(lw_faq_items(),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP|JSON_HEX_TAG);
+ echo '<div class="lw-faq-repeater" data-context="'.($is_customizer?'customizer':'studio').'">';
+ echo '<p class="description">Add FAQs as needed. Use Move Up / Down to change their order; removing a question also removes it from the homepage.</p>';
+ echo '<div class="lw-faq-editor-list" aria-live="polite"></div>';
+ echo '<button type="button" class="button button-secondary lw-faq-add">+ Add New FAQ</button>';
+ echo '<input type="hidden" class="lw-faq-json" '.($is_customizer?'data-customize-setting-link="lw_options[faq_items]"':'name="lw_options[faq_items]"').' value="'.esc_attr($list).'">';
+ echo '<p class="description">Changes appear on the homepage after publishing/saving. Existing questions are retained on upgrade.</p></div>';
+}
+
 function lw_sanitize_options($input) {
  $old=lw_options(); if (!is_array($input)) return $old;
  $allowed=lw_defaults();
  $hex=array('primary','accent','background','surface','ink','muted','header_bg','header_color','topbar_bg','topbar_color','archive_bg_color');
- $urls=array('cta_url','hero_button_url','hero_secondary_url','instagram','facebook','youtube','location_map_url');
+ $urls=array('cta_url','hero_button_url','hero_secondary_url','instagram','facebook','youtube','location_map_url','about_button_url','cta_button_url');
  $emails=array('email','contact_recipient');
  $numbers=array('container_width'=>array(780,1700),'radius'=>array(0,40),'section_gap'=>array(38,150),'header_height'=>array(50,150),'header_padding'=>array(0,45),'logo_height'=>array(25,140),'header_gap'=>array(0,55),'menu_gap'=>array(0,55),'menu_font_size'=>array(9,20),'header_mobile_height'=>array(56,110),'hero_height'=>array(380,970),'hero_overlay'=>array(0,95),'projects_count'=>array(1,24),'blog_count'=>array(1,12),'animation_speed'=>array(200,1800),'archive_banner_padding'=>array(32,190));
  $bools=array('header_sticky','header_transparent','header_shadow','header_width_full','topbar_enable','bottomrow_enable','stats_enable','about_enable','projects_enable','filters_enable','features_enable','gallery_enable','location_enable','faq_enable','cta_enable','blog_enable','contact_enable','buttons_round','float_whatsapp','float_contact','scroll_top','use_page_content','seo_enabled','seo_emit_keywords','archive_show_banner','archive_show_search','archive_show_results_count');
@@ -75,7 +115,11 @@ function lw_sanitize_options($input) {
     $parts=array_filter(array_map('trim',explode(',',strtolower((string)$value))));
     $new[$key]=implode(',',array_slice(array_unique(array_intersect($parts,lw_header_elements())),0,12));
   }
-  elseif ($key==='hero_image'||$key==='about_image'||in_array($key,array('gallery_1','gallery_2','gallery_3'),true)) $new[$key]=esc_url_raw($value);
+  elseif ($key==='hero_image'||$key==='about_image'||in_array($key,array('gallery_1','gallery_2','gallery_3','location_image'),true)) $new[$key]=esc_url_raw($value);
+  elseif ($key==='faq_items') {
+    $clean=lw_clean_faq_json((string)$value);
+    if($clean!==null) $new[$key]=$clean;
+  }
   elseif ($key==='github_repo') {
     $v=trim((string)$value);$new[$key]=($v==='' || preg_match('/\A[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+\z/D',$v))?$v:$old[$key];
   }
@@ -86,10 +130,16 @@ function lw_sanitize_options($input) {
  return $new;
 }
 add_action('admin_init',function(){register_setting('lw_settings','lw_options',array('type'=>'array','sanitize_callback'=>'lw_sanitize_options','default'=>lw_defaults()));});
+// One-time, lossless conversion of old numbered questions to the expandable list.
+add_action('admin_init',function(){
+ $raw=get_option('lw_options',array()); if(!is_array($raw) || (isset($raw['faq_items']) && $raw['faq_items']!=='')) return;
+ $raw['faq_items']=wp_json_encode(lw_faq_items(),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+ update_option('lw_options',$raw);
+},20);
 add_action('admin_menu',function(){add_theme_page('Luxury Website Studio','Luxury Website','edit_theme_options','lw-studio','lw_admin_page');});
 add_action('admin_enqueue_scripts',function($hook){
  if ($hook!=='appearance_page_lw-studio') return;
- wp_enqueue_media();wp_enqueue_style('lw-admin',LW_URI.'/assets/css/admin.css',array(),LW_VERSION);wp_enqueue_script('lw-admin',LW_URI.'/assets/js/admin.js',array(),LW_VERSION,true);
+ wp_enqueue_media();wp_enqueue_style('lw-admin',LW_URI.'/assets/css/admin.css',array(),LW_VERSION);wp_enqueue_script('lw-admin',LW_URI.'/assets/js/admin.js',array(),LW_VERSION,true);wp_enqueue_script('lw-faq-editor',LW_URI.'/assets/js/faq-editor.js',array(),LW_VERSION,true);wp_enqueue_style('lw-faq-editor',LW_URI.'/assets/css/faq-editor.css',array(),LW_VERSION);
 });
 function lw_option_input($id,$label,$type='text',$help='') {
  $o=lw_options();$value=$o[$id]??'';
@@ -139,21 +189,22 @@ function lw_admin_page() {
  lw_option_input('animation_speed','Animation Speed (milliseconds)','number');
  lw_option_input('container_width','Content Width (px)','number');lw_option_input('radius','Card Radius (px)','number');lw_option_input('section_gap','Section Spacing (px)','number');lw_option_input('buttons_round','Pill-Shaped Buttons','checkbox');
  echo '</div>';lw_option_input('custom_css','Advanced Custom CSS','textarea','CSS-only, for additional styling. Keep custom CSS in a child theme for easier long-term maintenance.');echo '</section>';
- echo '<section class="lw-panel" data-panel="home"><h2>04. Homepage Sections</h2><p>Toggle sections and edit their text. Uploaded images override the bundled decorative backgrounds.</p><div class="lw-field-grid">';
+ echo '<section class="lw-panel" data-panel="home"><h2>04. Homepage Sections</h2><p><strong>Every homepage text can be edited below.</strong> For live previews open Appearance → Customize → Luxury Website — Design Studio, then choose a Homepage section. The existing homepage layout and saved settings are preserved.</p><div class="lw-field-grid">';
  lw_option_select('site_mode','Website Type',array('agency'=>'Agency / Multi-Project','single'=>'Single Project / Landing Page'));
  lw_option_input('use_page_content','Use WordPress Page Content as Homepage','checkbox','Enable when using Elementor or a custom homepage designed in Gutenberg.');
  lw_option_input('hero_kicker','Hero Eyebrow');lw_option_input('hero_title','Hero Headline');lw_option_input('hero_description','Hero Description','textarea');
  lw_option_input('hero_image','Hero Background Photo','image');lw_option_input('hero_overlay','Hero Dark Overlay 0–95','number');lw_option_input('hero_height','Hero Height (px)','number');
  lw_option_input('hero_button','Primary Button');lw_option_input('hero_button_url','Primary Button URL');lw_option_input('hero_secondary','Secondary Button');lw_option_input('hero_secondary_url','Secondary Button URL');
  echo '</div>';
- lw_field_group('Statistics',array(array('stats_enable','Enable Statistics','checkbox'),array('stat_1_number','Statistic 1 Number'),array('stat_1_label','Statistic 1 Label'),array('stat_2_number','Statistic 2 Number'),array('stat_2_label','Statistic 2 Label'),array('stat_3_number','Statistic 3 Number'),array('stat_3_label','Statistic 3 Label')));
- lw_field_group('About Section',array(array('about_enable','Enable About','checkbox'),array('about_kicker','About Eyebrow'),array('about_title','About Title'),array('about_description','About Description','textarea'),array('about_image','About Image','image')));
- lw_field_group('Projects & Features',array(array('projects_enable','Enable Featured Projects','checkbox'),array('projects_title','Projects Section Title'),array('projects_description','Projects Description','textarea'),array('projects_count','Number of Projects','number'),array('filters_enable','Show Project Filters','checkbox'),array('features_enable','Enable Features','checkbox'),array('features_title','Features Heading'),array('feature_1_title','Feature 1'),array('feature_1_body','Feature 1 Body','textarea'),array('feature_2_title','Feature 2'),array('feature_2_body','Feature 2 Body','textarea'),array('feature_3_title','Feature 3'),array('feature_3_body','Feature 3 Body','textarea')));
- lw_field_group('Gallery, Location & FAQs',array(array('gallery_enable','Enable Image Gallery','checkbox'),array('gallery_title','Gallery Title'),array('gallery_1','Gallery Image 1','image'),array('gallery_2','Gallery Image 2','image'),array('gallery_3','Gallery Image 3','image'),array('location_enable','Enable Location Section','checkbox'),array('location_title','Location Title'),array('location_description','Location Description','textarea'),array('location_map_url','Google Maps URL','url'),array('faq_enable','Enable FAQ Section','checkbox'),array('faq_title','FAQ Section Title'),array('faq_1_question','Question 1'),array('faq_1_answer','Answer 1','textarea'),array('faq_2_question','Question 2'),array('faq_2_answer','Answer 2','textarea'),array('faq_3_question','Question 3'),array('faq_3_answer','Answer 3','textarea')));
- lw_field_group('Call to Action & Blog',array(array('cta_enable','Enable CTA Section','checkbox'),array('cta_section_title','CTA Heading'),array('cta_section_desc','CTA Description','textarea'),array('blog_enable','Enable Latest Articles','checkbox'),array('blog_title','Blog Heading'),array('blog_count','Number of Articles','number')));
+ lw_field_group('Statistics',array(array('home_search_kicker','Property Search Small Label'),array('stats_enable','Enable Statistics','checkbox'),array('stat_1_number','Statistic 1 Number'),array('stat_1_label','Statistic 1 Label'),array('stat_2_number','Statistic 2 Number'),array('stat_2_label','Statistic 2 Label'),array('stat_3_number','Statistic 3 Number'),array('stat_3_label','Statistic 3 Label')));
+ lw_field_group('About Section',array(array('about_enable','Enable About','checkbox'),array('about_kicker','About Eyebrow'),array('about_title','About Title'),array('about_description','About Description','textarea'),array('about_image','About Image','image'),array('about_button_text','About Link Label'),array('about_button_url','About Link URL','url'),array('about_image_badge_top','Image Badge Top'),array('about_image_badge_bottom','Image Badge Bottom')));
+ lw_field_group('Projects & Features',array(array('projects_enable','Enable Featured Projects','checkbox'),array('projects_title','Projects Section Title'),array('projects_description','Projects Description','textarea'),array('projects_kicker','Projects Small Label'),array('projects_all_text','View All Projects Text'),array('projects_count','Number of Projects','number'),array('filters_enable','Show Project Filters','checkbox'),array('features_enable','Enable Features','checkbox'),array('features_title','Features Heading'),array('features_kicker','Feature Small Label'),array('feature_1_title','Feature 1'),array('feature_1_body','Feature 1 Body','textarea'),array('feature_2_title','Feature 2'),array('feature_2_body','Feature 2 Body','textarea'),array('feature_3_title','Feature 3'),array('feature_3_body','Feature 3 Body','textarea')));
+ lw_field_group('Gallery, Location & FAQs',array(array('gallery_enable','Enable Image Gallery','checkbox'),array('gallery_title','Gallery Title'),array('gallery_kicker','Gallery Small Label'),array('gallery_1','Gallery Image 1','image'),array('gallery_2','Gallery Image 2','image'),array('gallery_3','Gallery Image 3','image'),array('location_enable','Enable Location Section','checkbox'),array('location_title','Location Title'),array('location_kicker','Location Small Label'),array('location_image','Location Image','image'),array('location_art_label','Map Placeholder Label'),array('location_map_label','Maps Link Text'),array('location_description','Location Description','textarea'),array('location_map_url','Google Maps URL','url'),array('faq_enable','Enable FAQ Section','checkbox'),array('faq_title','FAQ Section Title'),array('faq_kicker','FAQ Small Label'),));
+ echo '<h3>FAQ Questions & Answers</h3>'; lw_faq_repeater_markup(false);
+ lw_field_group('Call to Action & Blog',array(array('cta_enable','Enable CTA Section','checkbox'),array('cta_section_title','CTA Heading'),array('cta_kicker','CTA Small Label'),array('cta_button_text','CTA Button Text'),array('cta_button_url','CTA Button Link','url'),array('cta_section_desc','CTA Description','textarea'),array('blog_enable','Enable Latest Articles','checkbox'),array('blog_title','Blog Heading'),array('blog_kicker','Articles Small Label'),array('blog_all_text','All Articles Link Label'),array('blog_count','Number of Articles','number')));
  echo '</section>';
  echo '<section class="lw-panel" data-panel="contact"><h2>05. Contact, Social & Footer</h2>';
- lw_field_group('Contact Details',array(array('contact_enable','Enable Contact Form','checkbox'),array('contact_title','Contact Section Title'),array('contact_desc','Contact Intro','textarea'),array('contact_recipient','Enquiries Sent To (email)','email','Leave empty to use WordPress Settings > General > Administration Email Address'),array('phone','Phone Number'),array('whatsapp','WhatsApp With Country Code'),array('email','Public Email','email'),array('office_address','Office Address','textarea'),array('rera_number','RERA / Registration Number')));
+ lw_field_group('Contact Details',array(array('contact_enable','Enable Contact Form','checkbox'),array('contact_title','Contact Section Title'),array('contact_kicker','Contact Small Label'),array('contact_desc','Contact Intro','textarea'),array('contact_recipient','Enquiries Sent To (email)','email','Leave empty to use WordPress Settings > General > Administration Email Address'),array('phone','Phone Number'),array('whatsapp','WhatsApp With Country Code'),array('email','Public Email','email'),array('office_address','Office Address','textarea'),array('rera_number','RERA / Registration Number')));
  lw_field_group('Social & Footer',array(array('instagram','Instagram Profile','url'),array('facebook','Facebook Profile','url'),array('youtube','YouTube Channel','url'),array('footer_about','Footer Intro','textarea'),array('footer_disclaimer','Legal Disclaimer','textarea'),array('footer_copyright','Copyright Override (optional)'),array('float_whatsapp','Floating WhatsApp','checkbox'),array('float_contact','Floating Contact Button','checkbox'),array('scroll_top','Back To Top Button','checkbox')));
  echo '</section>';
  echo '<section class="lw-panel" data-panel="archive"><h2>Projects / Property Listing Page</h2><p>Customize the <code>/projects/</code> archive. This section controls the listing banner, headline, search section and backdrop; it does not change your homepage or the individual property details pages.</p>';

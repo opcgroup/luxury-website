@@ -3,7 +3,7 @@ Theme Name: Luxury Website
 Theme URI: https://example.com/luxury-website/
 Author: Luxury Website Studio
 Description: Premium real estate WordPress theme with property listings, search and budget filters, floor plans, gallery, project enquiries, no-code builder, SEO, custom header, animations and GitHub updates.
-Version: 1.3.3
+Version: 1.3.5
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
@@ -184,3 +184,8 @@ Tags: custom-logo, custom-menu, featured-images, blog, one-column, two-columns, 
   border: 0;
   box-shadow: none;
 }
+
+/* v1.3.4 editable location artwork */
+.lw-location-art.lw-location-with-image{padding:0;overflow:hidden;display:block;background:var(--lw-surface)}
+.lw-location-art .lw-location-photo{width:100%;height:340px;object-fit:cover;border-radius:inherit}
+@media(max-width:720px){.lw-location-art .lw-location-photo{height:240px}}

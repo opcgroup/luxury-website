@@ -6,7 +6,17 @@ add_action('customize_register',function($wp_customize){
   'lw_identity'=>array('title'=>'Global Colours & Fonts','priority'=>10),
   'lw_header'=>array('title'=>'Header & Navigation','priority'=>20),
   'lw_hero'=>array('title'=>'Hero & Buttons','priority'=>30),
-  'lw_sections'=>array('title'=>'Homepage Sections','priority'=>40),
+  'lw_sections'=>array('title'=>'Homepage – Show / Hide Sections','priority'=>40),
+  'lw_home_stats'=>array('title'=>'Homepage – Property Search & Stats','priority'=>41),
+  'lw_home_about'=>array('title'=>'Homepage – About','priority'=>42),
+  'lw_home_projects'=>array('title'=>'Homepage – Projects & Cards','priority'=>43),
+  'lw_home_features'=>array('title'=>'Homepage – Feature Cards','priority'=>44),
+  'lw_home_gallery'=>array('title'=>'Homepage – Image Gallery','priority'=>46),
+  'lw_home_location'=>array('title'=>'Homepage – Location & Map','priority'=>47),
+  'lw_home_faq'=>array('title'=>'Homepage – FAQ Questions & Answers','priority'=>48),
+  'lw_home_cta'=>array('title'=>'Homepage – Call to Action','priority'=>49),
+  'lw_home_blog'=>array('title'=>'Homepage – Articles','priority'=>51),
+  'lw_home_contact'=>array('title'=>'Homepage – Contact Form Intro','priority'=>52),
   'lw_archive'=>array('title'=>'Projects Listing Page','priority'=>45),
   'lw_motion'=>array('title'=>'Cards & Animations','priority'=>50),
   'lw_footer'=>array('title'=>'Contact & Footer','priority'=>60),
@@ -31,7 +41,29 @@ add_action('customize_register',function($wp_customize){
  $add('lw_hero','hero_image','Hero Image','image');$add('lw_hero','hero_style','Hero Design','select',array('split'=>'Split','full'=>'Full Bleed','minimal'=>'Minimal'));
  $add('lw_hero','hero_overlay','Hero Photo Overlay %','number');$add('lw_hero','hero_height','Hero Minimum Height (px)','number');
  foreach(array('stats_enable'=>'Show Stats','about_enable'=>'Show About','projects_enable'=>'Show Projects','filters_enable'=>'Project Filters','features_enable'=>'Show Features','gallery_enable'=>'Show Image Gallery','location_enable'=>'Show Location','faq_enable'=>'Show FAQ','cta_enable'=>'Show CTA','blog_enable'=>'Show Articles','contact_enable'=>'Show Enquiry Form','use_page_content'=>'Use Custom Homepage Content') as $id=>$label) $add('lw_sections',$id,$label,'checkbox');
- foreach(array('about_title'=>'About Title','projects_title'=>'Projects Title','features_title'=>'Features Title','cta_section_title'=>'CTA Title','blog_title'=>'Blog Title','contact_title'=>'Contact Title') as $id=>$label) $add('lw_sections',$id,$label);
+ // Homepage labels, fields and images are all editable in the live Customizer.
+ $add('lw_home_stats','home_search_kicker','Search Form Eyebrow');
+ for($i=1;$i<=3;$i++) { $add('lw_home_stats','stat_'.$i.'_number','Statistic '.$i.' Number');$add('lw_home_stats','stat_'.$i.'_label','Statistic '.$i.' Label'); }
+ foreach(array('about_kicker'=>'Small Label','about_title'=>'Heading','about_description'=>'Description','about_button_text'=>'Button Text','about_button_url'=>'Button Link','about_image_badge_top'=>'Image Badge Top','about_image_badge_bottom'=>'Image Badge Bottom') as $id=>$label) $add('lw_home_about',$id,$label,$id==='about_description'?'textarea':'text');
+ $add('lw_home_about','about_image','About Image','image');
+ foreach(array('projects_kicker'=>'Small Label','projects_title'=>'Projects Heading','projects_description'=>'Description','projects_all_text'=>'View All Link Text') as $id=>$label) $add('lw_home_projects',$id,$label,$id==='projects_description'?'textarea':'text');
+ $add('lw_home_projects','projects_count','Number of Projects','number');
+ foreach(array('features_kicker'=>'Small Label','features_title'=>'Features Heading') as $id=>$label) $add('lw_home_features',$id,$label);
+ for($i=1;$i<=3;$i++) { $add('lw_home_features','feature_'.$i.'_title','Feature Card '.$i.' Title');$add('lw_home_features','feature_'.$i.'_body','Feature Card '.$i.' Description','textarea'); }
+ foreach(array('gallery_kicker'=>'Small Label','gallery_title'=>'Gallery Heading') as $id=>$label) $add('lw_home_gallery',$id,$label);
+ for($i=1;$i<=3;$i++) $add('lw_home_gallery','gallery_'.$i,'Gallery Image '.$i,'image');
+ foreach(array('location_kicker'=>'Small Label','location_title'=>'Location Heading','location_description'=>'Location Description','location_art_label'=>'Map Card Label','location_map_label'=>'Maps Link Text') as $id=>$label) $add('lw_home_location',$id,$label,$id==='location_description'?'textarea':'text');
+ $add('lw_home_location','location_map_url','Google Maps URL','url');$add('lw_home_location','location_image','Location / Map Illustration','image');
+ $add('lw_home_faq','faq_kicker','Small Label');$add('lw_home_faq','faq_title','FAQ Heading');
+ // Expandable FAQ repeater: one setting, with Add/Remove/Reorder controls.
+ $sid='lw_options[faq_items]';
+ $wp_customize->add_setting($sid,array('type'=>'option','default'=>wp_json_encode(lw_faq_items()),'capability'=>'edit_theme_options','transport'=>'refresh','sanitize_callback'=>function($value){$clean=lw_clean_faq_json($value);return $clean!==null?$clean:wp_json_encode(lw_faq_items());}));
+ $wp_customize->add_control(new LW_Customize_FAQ_Repeater($wp_customize,$sid,array('label'=>'FAQ Questions & Answers','section'=>'lw_home_faq','settings'=>$sid,'priority'=>20)));
+ foreach(array('cta_kicker'=>'Small Label','cta_section_title'=>'CTA Heading','cta_section_desc'=>'CTA Description','cta_button_text'=>'CTA Button Text') as $id=>$label) $add('lw_home_cta',$id,$label,$id==='cta_section_desc'?'textarea':'text');
+ $add('lw_home_cta','cta_button_url','CTA Button URL','url');
+ foreach(array('blog_kicker'=>'Small Label','blog_title'=>'Articles Heading','blog_all_text'=>'All Articles Link Text') as $id=>$label) $add('lw_home_blog',$id,$label);
+ $add('lw_home_blog','blog_count','Number of Articles','number');
+ foreach(array('contact_kicker'=>'Small Label','contact_title'=>'Contact Heading','contact_desc'=>'Contact Description') as $id=>$label) $add('lw_home_contact',$id,$label,$id==='contact_desc'?'textarea':'text');
  foreach(array('archive_show_banner'=>'Show Listing Banner','archive_show_search'=>'Show Property Filters','archive_show_results_count'=>'Show Result Count') as $id=>$label) $add('lw_archive',$id,$label,'checkbox');
  foreach(array('archive_kicker'=>'Small Intro (blank = Website Name)','archive_title'=>'Banner Heading (H1)','archive_description'=>'Banner Description','archive_search_kicker'=>'Search Intro','archive_search_title'=>'Search Heading') as $id=>$label) $add('lw_archive',$id,$label,($id==='archive_description'?'textarea':'text'));
  $add('lw_archive','archive_bg_image','Banner Background Image','image');
@@ -43,4 +75,19 @@ add_action('customize_register',function($wp_customize){
  $add('lw_motion','card_hover','Card Hover','select',array('none'=>'None','lift'=>'Lift','zoom'=>'Zoom','glow'=>'Glow'));
  $add('lw_motion','animation_speed','Speed (ms)','number');$add('lw_motion','section_gap','Section Spacing (px)','number');
  foreach(array('whatsapp'=>'WhatsApp Number','email'=>'Public Email','contact_recipient'=>'Lead Email','office_address'=>'Office Address','rera_number'=>'RERA Registration','footer_about'=>'Footer Text','footer_disclaimer'=>'Disclaimer') as $id=>$label) $add('lw_footer',$id,$label, in_array($id,array('office_address','footer_about','footer_disclaimer'),true)?'textarea':'text');
+});
+
+add_action('customize_register',function(){
+ if(class_exists('LW_Customize_FAQ_Repeater')) return;
+ class LW_Customize_FAQ_Repeater extends WP_Customize_Control {
+  public $type='lw_faq_repeater';
+  protected function render_content() {
+   echo '<span class="customize-control-title">'.esc_html($this->label).'</span>';
+   lw_faq_repeater_markup(true);
+  }
+ }
+},1);
+add_action('customize_controls_enqueue_scripts',function(){
+ wp_enqueue_script('lw-faq-editor',LW_URI.'/assets/js/faq-editor.js',array('customize-controls'),LW_VERSION,true);
+ wp_enqueue_style('lw-faq-editor',LW_URI.'/assets/css/faq-editor.css',array(),LW_VERSION);
 });
