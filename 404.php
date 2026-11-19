@@ -1,0 +1,1 @@
+<?php get_header();?><section class="lw-section lw-not-found"><div class="lw-container"><span class="lw-eyebrow">404 — PAGE NOT FOUND</span><h1>This address isn't here.</h1><p>Explore other pages or return to the homepage.</p><a class="lw-button" href="<?php echo esc_url(home_url('/')); ?>">Back to Home ↗</a></div></section><?php get_footer(); ?>

@@ -1,0 +1,1 @@
+<?php if(post_password_required())return;?><div class="lw-comments"><?php if(have_comments()): ?><h3><?php echo esc_html(get_comments_number().' Comments'); ?></h3><ol><?php wp_list_comments(array('style'=>'ol','short_ping'=>true)); ?></ol><?php the_comments_pagination();endif;comment_form();?></div>

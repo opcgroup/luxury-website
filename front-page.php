@@ -1,0 +1,49 @@
+<?php
+if(!defined('ABSPATH')) exit;
+get_header();$o=lw_options();
+$front_id=(int)get_option('page_on_front');
+$elementor_page=$front_id && get_post_meta($front_id,'_elementor_edit_mode',true)==='builder';
+$block_home=$front_id && strpos((string)get_post_field('post_content',$front_id),'<!-- wp:luxury/')!==false;
+if($front_id && ($o['use_page_content'] || $elementor_page || $block_home)) {
+  $p=get_post($front_id);if($p) { echo '<div class="lw-custom-homepage">'.apply_filters('the_content',$p->post_content).'</div>'; }
+} else {
+ $img=$o['hero_image'] ?: LW_URI.'/assets/img/hero-'.sanitize_file_name($o['preset']).'.svg';
+ ?>
+<section class="lw-hero" style="--lw-hero-photo:url('<?php echo esc_url($img); ?>');--lw-overlay:<?php echo esc_attr((int)$o['hero_overlay']/100); ?>">
+ <div class="lw-container lw-hero-inner">
+  <div class="lw-hero-content lw-reveal"><span class="lw-eyebrow"><?php echo esc_html($o['hero_kicker']); ?></span>
+   <h1><?php echo esc_html($o['hero_title']); ?></h1>
+   <p><?php echo esc_html($o['hero_description']); ?></p>
+   <div class="lw-hero-actions"><a class="lw-button" href="<?php echo lw_active_link($o['hero_button_url'],'#projects'); ?>"><?php echo esc_html($o['hero_button']); ?> <span aria-hidden="true">↗</span></a><a class="lw-button lw-button-outline" href="<?php echo lw_active_link($o['hero_secondary_url'],'#contact'); ?>"><?php echo esc_html($o['hero_secondary']); ?></a></div>
+  </div>
+  <?php if($o['hero_style']==='split'): ?><div class="lw-hero-picture" aria-hidden="true"></div><?php endif; ?>
+ </div>
+ <div class="lw-hero-scroll" aria-hidden="true">SCROLL TO DISCOVER <span>↓</span></div>
+</section>
+<div class="lw-home-property-search"><div class="lw-container"><span class="lw-eyebrow">FIND A PROPERTY</span><?php lw_render_property_search(true); ?></div></div>
+<?php if($o['stats_enable']): ?><section class="lw-stats"><div class="lw-container lw-stats-grid">
+<?php for($i=1;$i<=3;$i++): ?><div class="lw-stat lw-reveal"><strong><?php echo esc_html($o['stat_'.$i.'_number']); ?></strong><span><?php echo esc_html($o['stat_'.$i.'_label']); ?></span></div><?php endfor; ?>
+</div></section><?php endif; ?>
+<?php if($o['about_enable']): ?><section class="lw-section lw-about" id="about"><div class="lw-container lw-about-grid">
+ <div class="lw-about-image lw-reveal"><?php if($o['about_image']): ?><img loading="lazy" src="<?php echo esc_url($o['about_image']); ?>" alt="<?php echo esc_attr($o['about_title']); ?>"><?php else: ?><div class="lw-abstract-architecture"><span></span><span></span><span></span></div><?php endif; ?><div class="lw-image-accent"><span>DESIGNED</span><strong>FOR<br> LIVING.</strong></div></div>
+ <div class="lw-about-text lw-reveal"><span class="lw-eyebrow"><?php echo esc_html($o['about_kicker']); ?></span><h2><?php echo esc_html($o['about_title']); ?></h2><p><?php echo esc_html($o['about_description']); ?></p><div class="lw-about-divider"></div><a class="lw-text-link" href="#contact">Discover More <span>↗</span></a></div>
+</div></section><?php endif; ?>
+<?php if($o['projects_enable']): ?><section class="lw-section lw-projects" id="projects"><div class="lw-container">
+ <div class="lw-section-heading"><div><span class="lw-eyebrow">CURATED COLLECTION</span><h2><?php echo esc_html($o['projects_title']); ?></h2><p><?php echo esc_html($o['projects_description']); ?></p></div><a class="lw-text-link" href="<?php echo esc_url(get_post_type_archive_link('lw_project')); ?>">View All Projects <span>↗</span></a></div>
+ <?php $q=new WP_Query(array('post_type'=>'lw_project','posts_per_page'=>absint($o['projects_count'])));
+ if($q->have_posts()):
+ if($o['filters_enable']): $terms=get_terms(array('taxonomy'=>'lw_project_type','hide_empty'=>true));if(!is_wp_error($terms)&&$terms): ?><div class="lw-filter-bar" role="group" aria-label="Filter properties"><button type="button" class="is-active" data-filter="all" aria-pressed="true">All Projects</button><?php foreach($terms as $term): ?><button type="button" data-filter="<?php echo esc_attr($term->slug); ?>" aria-pressed="false"><?php echo esc_html($term->name); ?></button><?php endforeach; ?></div><?php endif;endif; ?>
+ <div class="lw-project-grid"><?php while($q->have_posts()):$q->the_post();lw_project_card(get_the_ID());endwhile; ?></div>
+ <?php else: ?><div class="lw-empty"><p>Featured projects will appear here.</p><?php if(current_user_can('edit_posts')): ?><a href="<?php echo esc_url(admin_url('post-new.php?post_type=lw_project')); ?>" class="lw-button">Add First Project ↗</a><?php endif; ?></div><?php endif;wp_reset_postdata(); ?>
+ </div></section><?php endif; ?>
+<?php if($o['features_enable']): ?><section class="lw-section lw-features" id="highlights"><div class="lw-container"><div class="lw-center-heading"><span class="lw-eyebrow">THE DETAILS MATTER</span><h2><?php echo esc_html($o['features_title']); ?></h2></div><div class="lw-feature-grid">
+<?php $icons=array('✦','⌂','◇');for($i=1;$i<=3;$i++): ?><article class="lw-feature lw-reveal"><div class="lw-feature-icon"><?php echo esc_html($icons[$i-1]); ?></div><span class="lw-feature-number">0<?php echo esc_html($i); ?></span><h3><?php echo esc_html($o['feature_'.$i.'_title']); ?></h3><p><?php echo esc_html($o['feature_'.$i.'_body']); ?></p></article><?php endfor; ?>
+</div></div></section><?php endif; ?>
+<?php if($o['gallery_enable']&&array_filter(array($o['gallery_1'],$o['gallery_2'],$o['gallery_3']))): ?><section class="lw-section lw-gallery" id="gallery"><div class="lw-container"><div class="lw-center-heading"><span class="lw-eyebrow">THE GALLERY</span><h2><?php echo esc_html($o['gallery_title']); ?></h2></div><div class="lw-gallery-grid"><?php foreach(array('gallery_1','gallery_2','gallery_3') as $key):if(!$o[$key])continue; ?><a class="lw-gallery-card lw-reveal" href="<?php echo esc_url($o[$key]); ?>" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="<?php echo esc_url($o[$key]); ?>" alt="<?php echo esc_attr($o['gallery_title']); ?>"><span aria-hidden="true">↗</span></a><?php endforeach; ?></div></div></section><?php endif; ?>
+<?php if($o['location_enable']): ?><section class="lw-section lw-location" id="location"><div class="lw-container lw-location-inner"><div class="lw-reveal"><span class="lw-eyebrow">LOCATION & ACCESS</span><h2><?php echo esc_html($o['location_title']); ?></h2><p><?php echo esc_html($o['location_description']); ?></p><?php if($o['office_address']): ?><strong><?php echo esc_html($o['office_address']); ?></strong><?php endif; ?><?php if($o['location_map_url']): ?><p><a class="lw-text-link" href="<?php echo esc_url($o['location_map_url']); ?>" target="_blank" rel="noopener noreferrer">Open in Maps ↗</a></p><?php endif; ?></div><div class="lw-location-art lw-reveal"><span class="lw-location-pin">⌾</span><span>LOCATION & CONNECTIVITY</span></div></div></section><?php endif; ?>
+<?php if($o['faq_enable']): ?><section class="lw-section lw-faq" id="faq"><div class="lw-container lw-faq-grid"><div><span class="lw-eyebrow">GOOD TO KNOW</span><h2><?php echo esc_html($o['faq_title']); ?></h2></div><div class="lw-faq-items"><?php for($i=1;$i<=3;$i++):if(!$o['faq_'.$i.'_question'])continue;?><details class="lw-faq-item lw-reveal"><summary><?php echo esc_html($o['faq_'.$i.'_question']); ?><span aria-hidden="true">+</span></summary><p><?php echo esc_html($o['faq_'.$i.'_answer']); ?></p></details><?php endfor; ?></div></div></section><?php endif; ?>
+<?php if($o['cta_enable']): ?><section class="lw-cta-section lw-reveal"><div class="lw-container lw-cta-inner"><div><span class="lw-eyebrow">YOUR NEW BEGINNING</span><h2><?php echo esc_html($o['cta_section_title']); ?></h2><p><?php echo esc_html($o['cta_section_desc']); ?></p></div><a class="lw-button lw-button-white" href="#contact">Let's Connect <span aria-hidden="true">↗</span></a></div></section><?php endif; ?>
+<?php if($o['blog_enable']):$articles=new WP_Query(array('post_type'=>'post','posts_per_page'=>absint($o['blog_count']),'ignore_sticky_posts'=>true));if($articles->have_posts()): ?><section class="lw-section lw-articles" id="insights"><div class="lw-container"><div class="lw-section-heading"><div><span class="lw-eyebrow">THE JOURNAL</span><h2><?php echo esc_html($o['blog_title']); ?></h2></div><a class="lw-text-link" href="<?php echo esc_url(get_permalink(get_option('page_for_posts')) ?: home_url('/blog/')); ?>">Read All Articles ↗</a></div><div class="lw-article-grid">
+<?php while($articles->have_posts()):$articles->the_post(); ?><article class="lw-article-card lw-reveal"><a href="<?php the_permalink(); ?>" class="lw-article-cover"><?php if(has_post_thumbnail()) the_post_thumbnail('medium_large',array('loading'=>'lazy'));else echo '<span class="lw-placeholder-article">LUXURY LIVING</span>'; ?></a><div class="lw-article-text"><span class="lw-date"><?php echo esc_html(get_the_date()); ?></span><h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3><a class="lw-text-link" href="<?php the_permalink(); ?>">Read Story ↗</a></div></article><?php endwhile; ?></div></div></section><?php endif;wp_reset_postdata();endif; ?>
+<?php if($o['contact_enable']): ?><section class="lw-section lw-contact" id="contact"><div class="lw-container lw-contact-grid"><div class="lw-contact-intro lw-reveal"><span class="lw-eyebrow">LET'S TALK</span><h2><?php echo esc_html($o['contact_title']); ?></h2><p><?php echo esc_html($o['contact_desc']); ?></p><?php if($o['phone']): ?><p><strong>Call Us</strong><a href="<?php echo esc_url(lw_phone_href($o['phone'])); ?>"><?php echo esc_html($o['phone']); ?></a></p><?php endif; ?><?php if($o['office_address']): ?><p><strong>Visit Us</strong><?php echo esc_html($o['office_address']); ?></p><?php endif; ?></div><div class="lw-contact-card lw-reveal"><?php lw_render_contact_form('home'); ?></div></div></section><?php endif; ?>
+<?php } get_footer(); ?>

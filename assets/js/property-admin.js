@@ -1,0 +1,4 @@
+(function($){'use strict';$(function(){var input=$('#_lw_gallery_ids'),preview=$('#lw-gallery-preview'),frame=null;
+$('#lw-gallery-select').on('click',function(e){e.preventDefault();if(frame){frame.open();return;}frame=wp.media({title:'Select Property Gallery Images',button:{text:'Use selected images'},multiple:true,library:{type:'image'}});
+frame.on('select',function(){var ids=[],items=frame.state().get('selection');preview.empty();items.each(function(item){var obj=item.toJSON();ids.push(obj.id);var url=obj.sizes&&obj.sizes.thumbnail?obj.sizes.thumbnail.url:obj.url;$('<img>').attr({src:url,alt:obj.alt||''}).appendTo(preview);});input.val(ids.join(',')).trigger('change');});frame.open();});
+$('#lw-gallery-clear').on('click',function(e){e.preventDefault();input.val('').trigger('change');preview.empty();});});})(jQuery);
